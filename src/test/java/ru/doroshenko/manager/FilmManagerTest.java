@@ -2,12 +2,23 @@ package ru.doroshenko.manager;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.doroshenko.domain.Film;
+import ru.doroshenko.repository.FilmRepository;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 
-public class FilmManagerTestNonEmptyWithSetup {
-    FilmManager manager = new FilmManager(10);
+@ExtendWith(MockitoExtension.class)
+class FilmManagerTest {
+    @Mock
+    private FilmRepository filmRepository;
+    @InjectMocks
+    private FilmManager manager = new FilmManager(10);
     private final Film first = new Film(1, 11, "name1", "genre1", "url121");
     private final Film second = new Film(2, 22, "name2", "genre1", "url134");
     private final Film third = new Film(3, 33, "name3", "genre1", "url145");
@@ -39,44 +50,14 @@ public class FilmManagerTestNonEmptyWithSetup {
 
     @Test
     public void shouldGetAll() {
-        FilmManager manager = new FilmManager();
-        manager.add(first);
-        manager.add(second);
+        // настройка заглушки
+        Film[] returned = new Film[]{first, second, third, forth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth};
+        doReturn(returned).when(filmRepository).findAll();
+
+        Film[] expected = new Film[]{twelfth, eleventh, tenth, ninth, eighth, seventh, sixth, fifth, forth, third, second, first};
         Film[] actual = manager.getAll();
-        Film[] expected = new Film[]{second, first};
         assertArrayEquals(expected, actual);
     }
 
-    @Test
-    public void shouldReturnTenFilms() {
-        FilmManager manager = new FilmManager();
-        manager.films = this.manager.films;
-        Film[] expected = new Film[]{twelfth, eleventh, tenth, ninth, eighth, seventh, sixth, fifth, forth, third};
-        Film[] actual = manager.getPostWithLength();
-        assertArrayEquals(expected, actual);
-    }
 
-    @Test
-    public void shouldReturnCurrentFilms() {
-        FilmManager manager = new FilmManager();
-        manager.add(first);
-        manager.add(second);
-        manager.add(third);
-        manager.add(forth);
-        manager.add(fifth);
-        manager.add(sixth);
-        manager.add(seventh);
-        Film[] expected = new Film[]{seventh, sixth, fifth, forth, third, second, first};
-        Film[] actual = manager.getPostWithLength();
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void shouldReturnSomeFilms() {
-        FilmManager manager = new FilmManager(5);
-        manager.films = this.manager.films;
-        Film[] expected = new Film[]{twelfth, eleventh, tenth, ninth, eighth};
-        Film[] actual = manager.getPostWithLength();
-        assertArrayEquals(expected, actual);
-    }
 }
