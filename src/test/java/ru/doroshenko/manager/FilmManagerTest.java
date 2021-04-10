@@ -18,7 +18,7 @@ class FilmManagerTest {
     @Mock
     private FilmRepository filmRepository;
     @InjectMocks
-    private FilmManager manager = new FilmManager(10);
+    FilmManager manager;
     private final Film first = new Film(1, 11, "name1", "genre1", "url121");
     private final Film second = new Film(2, 22, "name2", "genre1", "url134");
     private final Film third = new Film(3, 33, "name3", "genre1", "url145");
@@ -49,15 +49,44 @@ class FilmManagerTest {
     }
 
     @Test
-    public void shouldGetAll() {
+    public void GetAll() {
         // настройка заглушки
-        Film[] returned = new Film[]{first, second, third, forth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth};
+        Film[] returned = new Film[]{first, second, third};
         doReturn(returned).when(filmRepository).findAll();
 
-        Film[] expected = new Film[]{twelfth, eleventh, tenth, ninth, eighth, seventh, sixth, fifth, forth, third, second, first};
+        Film[] expected = new Film[]{first, second, third};
+        Film[] actual = manager.showAll();
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    void showAll() {
+        Film[] returned = new Film[]{first, second, third};
+        doReturn(returned).when(filmRepository).findAll();
+        // вывод в прямом порядке
+        Film[] expected = new Film[]{first, second, third};
+        Film[] actual = manager.showAll();
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    void getNumberedLastAdded() {
+        Film[] returned = new Film[]{first, second, third, forth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth};
+        doReturn(returned).when(filmRepository).findAll();
+        // вывод 10 фильмов из 12 в обратном порядке
+        Film[] expected = new Film[]{twelfth, eleventh, tenth, ninth, eighth, seventh, sixth, fifth, forth, third};
         Film[] actual = manager.getAll();
         assertArrayEquals(expected, actual);
     }
 
-
+    @Test
+    void add() {
+        Film[] returned = new Film[]{first, second, third};
+        doReturn(returned).when(filmRepository).findAll();
+        doNothing().when(filmRepository).save(third);
+        manager.add(third);
+        Film[] expected = new Film[]{third, second, first};
+        Film[] actual = manager.getAll();
+        assertArrayEquals(expected, actual);
+    }
 }

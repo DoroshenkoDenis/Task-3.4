@@ -49,11 +49,11 @@ class FilmRepositoryTest {
         assertArrayEquals(expected, actual);
     }
 
-           @Test
-        public void shouldRemoveAll() {
-            filmRepository.removeAll();
-            Film[] actual = filmRepository.findAll();
-            Film[] expected = new Film[0];
-            assertArrayEquals(expected, actual);
-        }
+    @Test
+    public void shouldRemoveAll() {
+        filmRepository.removeAll();
+        Film[] actual = filmRepository.findAll();
+        Film[] expected = new Film[0];
+        assertArrayEquals(expected, actual);
+    }
 }

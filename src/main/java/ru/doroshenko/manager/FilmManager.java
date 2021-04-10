@@ -5,14 +5,13 @@ import ru.doroshenko.repository.FilmRepository;
 
 public class FilmManager {
     private FilmRepository repository;
-    private int postLength = 10;
+    public int postLength = 10;
 
-    public FilmManager(int postLength, FilmRepository repository) {
-        this.postLength = postLength;
-        this.repository = repository;
+    public FilmManager() {
     }
 
-    public FilmManager(int postLength) {
+    public FilmManager(FilmRepository repository, int postLength) {
+        this.repository = repository;
 
     }
 
@@ -22,7 +21,8 @@ public class FilmManager {
 
     public Film[] getAll() {
         Film[] films = repository.findAll();
-        Film[] result = new Film[films.length];
+        int resultLength = Math.min(postLength, films.length);
+        Film[] result = new Film[resultLength];
         for (int i = 0; i < result.length; i++) {
             int index = films.length - i - 1;
             result[i] = films[index];
@@ -30,14 +30,9 @@ public class FilmManager {
         return result;
     }
 
-    public Film[] getPostWithLength() {
-        int postLengthNow = Math.min(postLength, getAll().length);
-        Film[] post = new Film[postLengthNow];
-        for (int i = 0; i < postLengthNow; i++) {
-            int index = getAll().length - i - 1;
-            post[i] = getAll()[index];
-        }
-        return post;
+    public Film[] showAll() {
+        return repository.findAll();
     }
+
 }
 
